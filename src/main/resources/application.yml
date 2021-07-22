@@ -1,0 +1,11 @@
+datasource:
+  url: https://nofluffjobs.com/pl/jobs/remote/testing
+  grid: localhost:4242
+  headless_mode: true
+  tmp_directory: java.io.tmpdir
+  browser:
+    name: chrome
+    type: local
+
+
+

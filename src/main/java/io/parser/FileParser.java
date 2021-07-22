@@ -16,17 +16,21 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class FileParser {
 
     @Service
-    public class CsvHandler {    public <T> List<T> handle(CsvSchema csvSchema, String classPathResource, Class<T> model) throws IOException {
+    public class CsvHandler {
+        public <T> List<T> handle(CsvSchema csvSchema, String classPathResource, Class<T> model) throws IOException {
         return mapRecordsToObjects(csvSchema, classPathResource, model);
-    }    <U> List<U> mapRecordsToObjects(CsvSchema csvSchema, String classPathResource, Class<U> encodingType) throws IOException {
+    }
+
+    <U> List<U> mapRecordsToObjects(CsvSchema csvSchema, String classPathResource, Class<U> encodingType) throws IOException {
         CsvMapper csvMapper = new CsvMapper();
-        csvMapper.enable(CsvParser.Feature.IGNORE_TRAILING_UNMAPPABLE);        ObjectReader reader = csvMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+        csvMapper.enable(CsvParser.Feature.IGNORE_TRAILING_UNMAPPABLE);
+        ObjectReader reader = csvMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
                 .readerFor(encodingType)
-                .with(csvSchema);        MappingIterator<U> iterator;
+                .with(csvSchema);
+        MappingIterator<U> iterator;
         iterator = reader.readValues(new InputStreamReader(new FileInputStream(new ClassPathResource(classPathResource).getFile()), StandardCharsets.UTF_8));
         List<U> results = new ArrayList<>();
         iterator.forEachRemaining(results::add);

@@ -1,0 +1,8 @@
+datasource:
+  url: https://nofluffjobs.com/pl/jobs/remote/backend
+  grid: localhost:4242
+  headless_mode: true
+  tmp-directory: java.io.tmpdir
+  browser:
+    name: firefox
+    type: local

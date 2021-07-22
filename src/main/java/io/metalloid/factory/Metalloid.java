@@ -1,47 +1,45 @@
 package io.metalloid.factory;
 
-import io.metalloid.Constants;
-import lombok.SneakyThrows;
+import io.metalloid.configuration.WebDriverAgent;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.remote.RemoteWebDriver;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-
-import java.net.URL;
 
 @Component("metalloid")
 public class Metalloid {
-    private WebDriver createFirefoxDriver() {
-        return new FirefoxDriver();
-    }
+    @Autowired
+    private BrowserFactory browserFactory;
 
-    private WebDriver createChromeDriver() {
-        return new ChromeDriver();
-    }
+    @Autowired
+    private WebDriverAgent webDriverAgent;
 
-    @SneakyThrows
-    private RemoteWebDriver createRemoteFirefoxDriver() {
-        return new RemoteWebDriver(new URL(Constants.REMOTE_GRID), new BlogChromeOptions().get());
-    }
+    @Value("${datasource.browser.type}")
+    private String browserType;
 
-    @SneakyThrows
-    private RemoteWebDriver createRemoteChromeDriver() {
-        return new RemoteWebDriver(new URL(Constants.REMOTE_GRID), new BlogChromeOptions().get());
-    }
+    @Value("${datasource.browser.name}")
+    private String browserName;
 
+    @Value("${datasource.grid}")
+    private String grid;
+
+    @Bean
+    @Scope("prototype")
     public WebDriver run() {
         WebDriver driver;
-        switch (Constants.BROWSER_TYPE) {
-            case "LOCAL":
-                driver = Constants.BROWSER_NAME.equals("CHROME") ? createChromeDriver() : createFirefoxDriver();
+        switch (browserType) {
+            case "local":
+                driver = browserName.equals("chrome") ? browserFactory.createChromeDriver() : browserFactory.createFirefoxDriver();
                 break;
-            case "REMOTE":
-                driver = Constants.BROWSER_NAME.equals("CHROME") ? createRemoteChromeDriver() : createRemoteFirefoxDriver();
+            case "remote":
+                driver = browserName.equals("chrome") ? browserFactory.createRemoteChromeDriver() : browserFactory.createRemoteFirefoxDriver();
                 break;
-            default: throw new WebDriverException("Browser not implemented");
+            default: throw new WebDriverException("Browser is not implemented");
         }
+        webDriverAgent.setDriverPath();
         return driver;
     }
 }

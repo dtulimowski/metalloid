@@ -1,19 +1,25 @@
-package io.metalloid.factory;
+package io.metalloid.factory.options;
 
-import io.metalloid.Constants;
 import org.openqa.selenium.firefox.FirefoxOptions;
+import org.springframework.beans.factory.annotation.Value;
 
-public class BlogFirefoxOptions {
-    public  FirefoxOptions get() {
+public class ParametrizedFirefoxOptions {
+    @Value("${datasource.tmp-directory}")
+    private String tmpDirectory;
+
+    @Value("${datasource.headless_mode}")
+    private boolean headlessMode;
+
+    public FirefoxOptions get() {
         FirefoxOptions options = new FirefoxOptions();
         options.addPreference("browser.download.folderList", 2);
-        options.addPreference("browser.download.dir", Constants.TMP_DIRECTORY);
+        options.addPreference("browser.download.dir", tmpDirectory);
         options.addPreference("browser.helperApps.neverAsk.saveToDisk", "text/plain");
         options.addPreference("browser.helperApps.alwaysAsk.force", false);
         options.addPreference("browser.download.manager.showWhenStarting",false);
         options.addPreference("general.useragent.override", "Coinfirm Tests/1.0");
 
-        options.setHeadless(Constants.HEADLESS_MODE);
+        options.setHeadless(headlessMode);
         options.addArguments("--start-fullscreen");
 
         options.setCapability("name", "myTestName");

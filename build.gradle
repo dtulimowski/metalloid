@@ -4,9 +4,18 @@ plugins {
 	id 'java'
 }
 
+plugins {
+	id("java-library") // or id("application")
+}
+
+java {
+	toolchain {
+		languageVersion.set(JavaLanguageVersion.of(11))
+	}
+}
+
 group = 'io.metalloid'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
 
 configurations {
 	compileOnly {
@@ -24,13 +33,20 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.4.4'
-	implementation group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '4.0.0-beta-2'
+	implementation group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '4.0.0-beta-4'
 	implementation group: 'io.github.bonigarcia', name: 'webdrivermanager', version: '4.4.0'
 	implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.3'
 	implementation group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-csv', version: '2.12.3'
-
+	implementation group: 'io.github.bonigarcia', name: 'webdrivermanager', version: '4.4.3'
+	implementation group: 'io.github.openfeign', name: 'feign-core', version: '11.2'
+	implementation group: 'io.github.openfeign', name: 'feign-slf4j', version: '11.2'
+	implementation group: 'io.github.openfeign', name: 'feign-gson', version: '11.2'
+	implementation group: 'io.github.openfeign', name: 'feign-okhttp', version: '11.2'
+	implementation group: 'org.springframework', name: 'spring-aspects', version: '5.3.8'
+	implementation group: 'org.apache.commons', name: 'commons-collections4', version: '4.4'
 }
 
 test {
 	useJUnitPlatform()
 }
+
